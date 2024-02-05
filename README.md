@@ -1,8 +1,6 @@
 # Vue Sneakers 👟
 
-## Как запустить?
-
-1. Склонировать репозиторий к себе на ПК
+1. Как запустить ?
 2. `npm install`
 3. `npm run dev`
 4. Готово!
@@ -11,9 +9,10 @@
 
 - Vue 3
 - Vue Router
+- Pinia
 - TailwindCSS
 - Axios
 - @formkit/auto-animate
-- Composition API / Options API
+- Composition API
 - ESLint
 - Prettier
