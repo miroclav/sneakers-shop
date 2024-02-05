@@ -1,14 +1,22 @@
 <script setup>
-import CartItem from './CartItem.vue';
+import CartItem from './CartItem.vue'
+import { useSneakersStore } from '../stores/SneakersStore'
+import Loader from './Loader.vue'
+
+const sneakersStore = useSneakersStore()
 </script>
 
 <template>
-  <div class="fixed z-10 top-0 h-full w-full bg-black opacity-70" />
+  <div
+    @click="sneakersStore.toggleDrawer"
+    class="fixed z-10 top-0 h-full w-full bg-black opacity-70"
+  />
   <div
     class="flex flex-col justify-between fixed h-full z-10 top-0 h-full right-0 w-96 bg-white px-10 py-7"
   >
     <h2 class="text-2xl font-bold mb-10 flex items-center gap-5">
       <svg
+        @click="sneakersStore.toggleDrawer"
         class="rotate-180 hover:-translate-x-1 opacity-30 hover:opacity-100 transition cursor-pointer"
         width="16"
         height="14"
@@ -36,29 +44,35 @@ import CartItem from './CartItem.vue';
     <div class="flex flex-col flex-1 justify-between">
       <div class="flex flex-col gap-5">
         <CartItem
-          title="Мужские Кроссовки Nike Blazer Mid Suede"
-          price="1000"
-          img="/sneakers/sneakers-1.jpg"
+          v-for="item in sneakersStore.showCart()"
+          :title="item.title"
+          :price="item.price"
+          :img="item.imageUrl"
+          :key="item.id"
+          :onClickDelete="() => sneakersStore.deleteFromCart(item)"
         />
       </div>
 
       <div>
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-5 mb-10">
           <div class="flex items-end gap-2">
             <span>Итого:</span>
             <div class="flex-1 border-b border-dashed" />
-            <span class="font-bold">1000 руб.</span>
+            <span class="font-bold">{{ sneakersStore.totalPrice }} руб.</span>
           </div>
 
           <div class="flex items-end gap-2">
             <span>Налог 5%:</span>
             <div class="flex-1 border-b border-dashed" />
-            <span class="font-bold">50 руб.</span>
+            <span class="font-bold">{{ sneakersStore.vatPrice }} руб.</span>
           </div>
         </div>
-
+        <Loader class="flex-1 flex-col" v-if="sneakersStore.isLoading" />
         <button
-          class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600"
+          v-else
+          class="flex justify-center items-center disabled:bg-slate-300 gap-3 w-full py-3 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600"
+          :disabled="!sneakersStore.totalPrice"
+          @click="sneakersStore.createOrders"
         >
           Оформить заказ
           <img src="/arrow-next.svg" alt="Arrow" />

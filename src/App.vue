@@ -1,9 +1,5 @@
-<script setup>
-import HomePage from './pages/Home.vue';
-import Drawer from './components/Drawer.vue';
-</script>
+<script setup></script>
 
 <template>
-  <!-- <Drawer /> -->
-  <HomePage />
+  <router-view />
 </template>
