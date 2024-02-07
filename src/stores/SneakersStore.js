@@ -6,27 +6,31 @@ const url = 'https://ac5251367a557371.mokky.dev/'
 export const useSneakersStore = defineStore('SneakersStore', () => {
     const items = ref([])
     const cart = ref([])
+    const orders = ref([])
     const isLoading = ref(false)
     const isDrawerOpen = ref(false)
     const filters = reactive({
         sortBy: '',
         searchQuery: ''
     })
+
     const addToCart = (item) => {
         if (!item.isAdded) {
-            cart.value.push(item)
+            cart.value = [...cart.value, item]
             item.isAdded = !item.isAdded
         }
         else {
             cart.value.splice(cart.value.indexOf(item), 1);
             item.isAdded = !item.isAdded
         }
+        localStorage.setItem('cart', JSON.stringify(cart.value));
     }
     const deleteFromCart = (item) => {
         const deleted = items.value.find(el => el.id === item.id)
         if (deleted) {
             deleted.isAdded = !deleted.isAdded
             cart.value.pop(deleted)
+            localStorage.setItem('cart', JSON.stringify(cart.value))
         }
     }
     const addToFavorite = (item) => {
@@ -52,7 +56,11 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
     const onChangeSearchInput = (event) => {
         filters.searchQuery = event.target.value
     }
-
+    const favcLength = computed(() => {
+        if (showFavorites().length > 0) {
+            return showFavorites().length
+        }
+    })
     const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
     const vatPrice = computed(() => Math.round(totalPrice.value * 0.05));
 
@@ -64,13 +72,13 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
                 items: cart.value,
                 totalPrice: totalPrice.value
             })
-            cart.value = []
             items.value = items.value.map(item => {
                 return {
                     ...item,
-                    isAdded: item.isAdded === false
+                    isAdded: item.isAdded === !item.isAdded
                 };
             });
+            cart.value = []
         } catch (error) {
         }
         finally {
@@ -78,6 +86,7 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         }
 
     }
+
 
     const fetchItem = async () => {
         try {
@@ -90,13 +99,41 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
             const { data } = await axios.get(`https://ac5251367a557371.mokky.dev/sneakers`, { params })
             items.value = data
         } catch (error) {
+            console.log(error);
         }
     }
 
-    onMounted(fetchItem)
+    const fetchOrders = async () => {
+        try {
+            const { data } = await axios.get(`https://ac5251367a557371.mokky.dev/orders`)
+            orders.value = data
+            const items = data.map(order => order.items.title);
+            console.log(items);
+            console.log(orders.value);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    onMounted(async () => {
+        cart.value = JSON.parse(localStorage.getItem('cart')) || []
+        await fetchItem()
+        await fetchOrders()
+        cart.value.forEach(item => {
+            const foundItem = items.value.find(el => el.id === item.id)
+            if (foundItem) {
+                foundItem.isAdded = true
+            }
+        })
+    })
     watch(filters, fetchItem)
+
+    watch(cart, () => {
+        localStorage.setItem('cart', JSON.stringify(cart.value));
+    });
     return {
         items,
+        orders,
         isDrawerOpen,
         toggleDrawer,
         onChangeSelect,
@@ -107,8 +144,10 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         totalPrice,
         vatPrice,
         isLoading,
+        favcLength,
         showFavorites,
         showCart,
+        fetchOrders,
         deleteFromCart,
         createOrders,
     }

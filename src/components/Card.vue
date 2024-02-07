@@ -4,6 +4,14 @@ defineProps({
   title: String,
   img: String,
   price: Number,
+  hiddenFav: {
+    type: Boolean,
+    required: false
+  },
+  hiddenAdd: {
+    type: Boolean,
+    required: false
+  },
   isFavorite: Boolean,
   isAdded: Boolean,
   onClickFavorite: Function,
@@ -17,6 +25,7 @@ defineProps({
   >
     <div class="absolute top-8 left-8">
       <img
+        :class="{ hidden: hiddenFav }"
         @click="onClickFavorite"
         :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
         alt="Favorite"
@@ -29,7 +38,12 @@ defineProps({
         <span class="text-slate-200">Цена:</span>
         <span class="font-bold">{{ price }} руб.</span>
       </div>
-      <img @click="onClickAdded" :src="isAdded ? '/checked.svg' : '/plus.svg'" alt="Plus" />
+      <img
+        :class="{ hidden: hiddenAdd }"
+        @click="onClickAdded"
+        :src="isAdded ? '/checked.svg' : '/plus.svg'"
+        alt="Plus"
+      />
     </div>
   </div>
 </template>

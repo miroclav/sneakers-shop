@@ -1,6 +1,11 @@
 <script setup>
 import { useSneakersStore } from '../stores/SneakersStore'
-
+defineProps({
+  title: {
+    type: String,
+    default: ''
+  }
+})
 const sneakersStore = useSneakersStore()
 </script>
 
@@ -21,7 +26,9 @@ const sneakersStore = useSneakersStore()
       </li>
       <router-link :to="{ path: '/favorites' }" class="flex items-center gap-3 cursor-pointer">
         <img src="/heart.svg" alt="Favorite" />
-        <span>Закладки</span>
+        <span
+          >Закладки <strong>{{ sneakersStore.favcLength }}</strong></span
+        >
       </router-link>
       <router-link :to="{ path: '/user' }" class="flex items-center gap-3 cursor-pointer">
         <img src="/profile.svg" alt="User" />

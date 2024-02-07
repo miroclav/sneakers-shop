@@ -2,6 +2,7 @@
 import CartItem from './CartItem.vue'
 import { useSneakersStore } from '../stores/SneakersStore'
 import Loader from './Loader.vue'
+import InfoBlock from './InfoBlock.vue'
 
 const sneakersStore = useSneakersStore()
 </script>
@@ -41,7 +42,14 @@ const sneakersStore = useSneakersStore()
       </svg>
       Корзина
     </h2>
-    <div class="flex flex-col flex-1 justify-between">
+    <InfoBlock
+      class="h-full"
+      v-if="!sneakersStore.totalPrice"
+      imgUrl="/package-icon.png"
+      title="Корзина пустая"
+      description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
+    />
+    <div v-else class="flex flex-col flex-1 justify-between">
       <div class="flex flex-col gap-5">
         <CartItem
           v-for="item in sneakersStore.showCart()"
