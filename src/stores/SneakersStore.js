@@ -7,6 +7,7 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
     const items = ref([])
     const cart = ref([])
     const orders = ref([])
+    const ordersItem = ref([])
     const isLoading = ref(false)
     const isDrawerOpen = ref(false)
     const filters = reactive({
@@ -68,9 +69,10 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         try {
             isLoading.value = true
 
-            const { data } = await axios.post(`https://ac5251367a557371.mokky.dev/orders`, {
+            const data = await axios.post(`https://ac5251367a557371.mokky.dev/orders`, {
                 items: cart.value,
-                totalPrice: totalPrice.value
+                totalPrice: totalPrice.value,
+                orderDate: new Date()
             })
             items.value = items.value.map(item => {
                 return {
@@ -78,15 +80,16 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
                     isAdded: item.isAdded === !item.isAdded
                 };
             });
+            console.log(new Date());
             cart.value = []
         } catch (error) {
+            console.log(error);
         }
         finally {
             isLoading.value = false
         }
 
     }
-
 
     const fetchItem = async () => {
         try {
@@ -107,8 +110,6 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         try {
             const { data } = await axios.get(`https://ac5251367a557371.mokky.dev/orders`)
             orders.value = data
-            const items = data.map(order => order.items.title);
-            console.log(items);
             console.log(orders.value);
         } catch (error) {
             console.log(error);
@@ -126,7 +127,8 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
             }
         })
     })
-    watch(filters, fetchItem)
+    watch(filters, () => fetchItem)
+    watch(orders, () => fetchOrders)
 
     watch(cart, () => {
         localStorage.setItem('cart', JSON.stringify(cart.value));
@@ -145,6 +147,7 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         vatPrice,
         isLoading,
         favcLength,
+        ordersItem,
         showFavorites,
         showCart,
         fetchOrders,

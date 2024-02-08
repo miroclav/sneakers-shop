@@ -1,8 +1,8 @@
-<script setup>
-import Card from '@/components/Card.vue'
+<script setup lang="ts">
 import { useSneakersStore } from '../stores/SneakersStore'
 import Header from '@/components/Header.vue'
 import Drawer from '@/components/Drawer.vue'
+import OrderItem from '@/components/OrderItem.vue'
 
 const sneakersStore = useSneakersStore()
 </script>
@@ -18,18 +18,9 @@ const sneakersStore = useSneakersStore()
       </h3>
       <div v-else>
         <h1 class="text-3xl font-bold mb-4">Мои заказы</h1>
-        {{ sneakersStore.orders }}
-        <div class="grid grid-cols-4 gap-10 p-4">
+        <div class="p-4">
           <transition-group name="list">
-            <Card
-              v-for="item in sneakersStore.orders"
-              :title="item.title"
-              :price="item.price"
-              :img="item.imageUrl"
-              :key="item.id"
-              hiddenFav
-              hiddenAdd
-            />
+            <OrderItem v-for="item in sneakersStore.orders" :item="item" />
           </transition-group>
         </div>
       </div>

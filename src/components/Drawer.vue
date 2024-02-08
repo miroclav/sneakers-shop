@@ -13,7 +13,7 @@ const sneakersStore = useSneakersStore()
     class="fixed z-10 top-0 h-full w-full bg-black opacity-70"
   />
   <div
-    class="flex flex-col justify-between fixed h-full z-10 top-0 h-full right-0 w-96 bg-white px-10 py-7"
+    class="flex flex-col justify-between fixed h-full scroll-auto z-10 top-0 h-full right-0 w-96 bg-white px-10 py-7"
   >
     <h2 class="text-2xl font-bold mb-10 flex items-center gap-5">
       <svg
@@ -49,8 +49,8 @@ const sneakersStore = useSneakersStore()
       title="Корзина пустая"
       description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
     />
-    <div v-else class="flex flex-col flex-1 justify-between">
-      <div class="flex flex-col gap-5">
+    <div v-else class="flex flex-col flex-1 h-full justify-between">
+      <div class="flex flex-col gap-5 overflow-auto">
         <CartItem
           v-for="item in sneakersStore.showCart()"
           :title="item.title"
