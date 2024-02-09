@@ -34,6 +34,12 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
             localStorage.setItem('cart', JSON.stringify(cart.value))
         }
     }
+    const deleteFromOrders = (item) => {
+        const deleted = orders.value.find(el => el.id === item.id)
+        if (deleted) {
+            orders.value.pop(deleted)
+        }
+    }
     const addToFavorite = (item) => {
         const favorite = items.value.find(el => el.id === item.id)
         if (favorite) {
@@ -80,7 +86,6 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
                     isAdded: item.isAdded === !item.isAdded
                 };
             });
-            console.log(new Date());
             cart.value = []
         } catch (error) {
             console.log(error);
@@ -105,12 +110,10 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
             console.log(error);
         }
     }
-
     const fetchOrders = async () => {
         try {
             const { data } = await axios.get(`https://ac5251367a557371.mokky.dev/orders`)
             orders.value = data
-            console.log(orders.value);
         } catch (error) {
             console.log(error);
         }
@@ -126,10 +129,9 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
                 foundItem.isAdded = true
             }
         })
-    })
-    watch(filters, () => fetchItem)
-    watch(orders, () => fetchOrders)
 
+    })
+    watch(filters, fetchItem)
     watch(cart, () => {
         localStorage.setItem('cart', JSON.stringify(cart.value));
     });
@@ -152,6 +154,7 @@ export const useSneakersStore = defineStore('SneakersStore', () => {
         showCart,
         fetchOrders,
         deleteFromCart,
+        deleteFromOrders,
         createOrders,
     }
 })

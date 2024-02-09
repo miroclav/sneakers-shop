@@ -14,13 +14,18 @@ const sneakersStore = useSneakersStore()
     <Header />
     <div class="p-10">
       <h3 class="text-2xl font-medium" v-if="sneakersStore.orders.length === 0">
-        Нет избранных товаров
+        Нет ваших заказов
       </h3>
       <div v-else>
-        <h1 class="text-3xl font-bold mb-4">Мои заказы</h1>
-        <div class="p-4">
+        <h1 class="text-2xl font-bold mb-6">Мои заказы</h1>
+        <div class="flex flex-col gap-4">
           <transition-group name="list">
-            <OrderItem v-for="item in sneakersStore.orders" :item="item" />
+            <OrderItem
+              v-for="item in sneakersStore.orders"
+              :item="item"
+              :key="item.id"
+              :onClickDelete="() => sneakersStore.deleteFromOrders(item)"
+            />
           </transition-group>
         </div>
       </div>

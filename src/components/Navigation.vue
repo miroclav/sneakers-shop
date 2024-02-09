@@ -4,7 +4,7 @@
       <h1 class="text-3xl font-bold">Все кроссовки</h1>
       <div class="flex items-center gap-4">
         <select
-          @change="sneakersStore.filters.sortBy = $event.target.value"
+          @change="sneakersStore.onChangeSelect"
           class="py-2 px-3 border border-gray-200 focus:border-gray-400 rounded-md focus:outline-none"
         >
           <option value="name">По названию</option>
@@ -13,7 +13,7 @@
         </select>
         <div class="relative">
           <input
-            @input="onChangeSearchInput"
+            @input="sneakersStore.onChangeSearchInput"
             type="text"
             class="border border-gray-200 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:border-gray-400"
             placeholder="Поиск..."
