@@ -30,11 +30,7 @@ const sneakersStore = useSneakersStore()
           >Закладки <strong>{{ sneakersStore.favcLength }}</strong></span
         >
       </router-link>
-      <router-link
-        @click="sneakersStore.fetchOrders"
-        :to="{ path: '/user' }"
-        class="flex items-center gap-3 cursor-pointer"
-      >
+      <router-link :to="{ path: '/user' }" class="flex items-center gap-3 cursor-pointer">
         <img src="/profile.svg" alt="User" />
         <span>Профиль</span>
       </router-link>

@@ -44,10 +44,17 @@ const sneakersStore = useSneakersStore()
     </h2>
     <InfoBlock
       class="h-full"
-      v-if="!sneakersStore.totalPrice"
+      v-if="!sneakersStore.totalPrice && !sneakersStore.isCreated"
       imgUrl="/package-icon.png"
       title="Корзина пустая"
       description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
+    />
+    <InfoBlock
+      class="h-full"
+      v-if="sneakersStore.isCreated"
+      imgUrl="/order-success-icon.png"
+      title="Заказ принят"
+      description="Можете его посмотеть у себя в профиле"
     />
     <div v-else class="flex flex-col flex-1 h-full justify-between">
       <div class="flex flex-col gap-5 overflow-auto">
